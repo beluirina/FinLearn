@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Perfil Inversor AR">
+<meta name="description" content="Identificá tu perfil inversor: conservador, moderado o agresivo. Consejos para invertir en Argentina.">
+<title>Perfil Inversor AR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8d5b7;
+    --dark: #1a1a2e;
+    --dark2: #16213e;
+    --surface: #f7f5f0;
+    --surface2: #eeeae0;
+    --text: #1a1a2e;
+    --text2: #5a5660;
+    --blue: #185FA5;
+    --blue-bg: #E6F1FB;
+    --green: #3B6D11;
+    --green-bg: #EAF3DE;
+    --amber: #BA7517;
+    --amber-bg: #FAEEDA;
+    --red: #993C1D;
+    --red-bg: #FAECE7;
+    --gray-bg: #F1EFE8;
+    --gray-text: #444441;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* ── Header ── */
+  .app-header {
+    background: var(--dark);
+    padding: 52px 20px 20px;
+    flex-shrink: 0;
+  }
+  .app-header .badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .app-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+  .app-header p {
+    font-size: 12px;
+    color: #9a8fa0;
+  }
+
+  /* ── Step dots ── */
+  .step-bar {
+    background: var(--dark2);
+    padding: 12px 20px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .step-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #3a3a5c;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .step-dot.active { background: var(--gold); }
+  .step-dot.done { background: #7a7a9a; }
+
+  /* ── Main scroll area ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 0 100px;
+  }
+
+  /* ── Chat bubble intro ── */
+  .chat-wrap {
+    padding: 16px 20px 0;
+  }
+  .chat-name {
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .chat-bubble {
+    background: white;
+    border: 1px solid #e0dbd0;
+    border-radius: 4px 14px 14px 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 92%;
+  }
+
+  /* ── Question card ── */
+  .q-card {
+    margin: 16px 20px 0;
+    background: white;
+    border: 1px solid #e0dbd0;
+    border-radius: var(--radius);
+    padding: 18px 16px;
+  }
+  .q-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid #e0dbd0;
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .opt-btn:active { transform: scale(0.98); }
+  .opt-btn.selected {
+    border-color: var(--gold);
+    background: white;
+  }
+  .opt-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid #c0bbb0;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .opt-btn.selected .opt-circle {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  /* ── Next button ── */
+  .next-wrap {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid #e0dbd0;
+    padding: 12px 20px 28px;
+    z-index: 100;
+  }
+  .next-btn {
+    width: 100%;
+    background: var(--dark);
+    color: var(--gold-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 15px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .next-btn:disabled { opacity: 0.3; }
+  .next-btn:active:not(:disabled) { opacity: 0.8; }
+
+  /* ── Result ── */
+  .result-wrap { padding: 0 20px; }
+
+  .result-hero {
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0 12px;
+  }
+  .rh-label { font-size: 10px; letter-spacing: 0.1em; margin-bottom: 8px; opacity: 0.6; color: #e8d5b7; }
+  .rh-title { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; margin-bottom: 4px; }
+  .rh-sub { font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+
+  .hero-cons { background: #042C53; }
+  .hero-cons .rh-title { color: #85B7EB; }
+  .hero-cons .rh-sub { color: #B5D4F4; }
+  .hero-cons .bar-fill { background: #378ADD; }
+
+  .hero-mod { background: #173404; }
+  .hero-mod .rh-title { color: #97C459; }
+  .hero-mod .rh-sub { color: #C0DD97; }
+  .hero-mod .bar-fill { background: #639922; }
+
+  .hero-agr { background: #4A1B0C; }
+  .hero-agr .rh-title { color: #F0997B; }
+  .hero-agr .rh-sub { color: #F5C4B3; }
+  .hero-agr .bar-fill { background: #D85A30; }
+
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 5px;
+    margin-top: 10px;
+  }
+  .bar-bg { background: rgba(255,255,255,0.12); border-radius: 4px; height: 7px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.9s ease; }
+
+  /* ── Section card ── */
+  .s-card {
+    background: white;
+    border: 1px solid #e0dbd0;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .s-title {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .s-icon { font-size: 14px; }
+
+  .bullet { display: flex; gap: 8px; margin-bottom: 9px; font-size: 14px; line-height: 1.55; }
+  .bullet-dot { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 2px 3px 2px 0;
+    font-weight: 500;
+  }
+  .t-blue { background: var(--blue-bg); color: var(--blue); }
+  .t-green { background: var(--green-bg); color: var(--green); }
+  .t-amber { background: var(--amber-bg); color: var(--amber); }
+  .t-red { background: var(--red-bg); color: var(--red); }
+  .t-gray { background: var(--gray-bg); color: var(--gray-text); }
+
+  .compare-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .cmp { border-radius: var(--radius-sm); padding: 10px 6px; text-align: center; }
+  .cmp-name { font-size: 10px; font-weight: 500; margin-bottom: 5px; }
+  .cmp-val { font-size: 20px; font-weight: 500; }
+  .cmp-active { outline: 2px solid var(--gold); }
+  .cmp-c { background: var(--blue-bg); }
+  .cmp-c .cmp-name { color: var(--blue); }
+  .cmp-c .cmp-val { color: #042C53; }
+  .cmp-m { background: var(--green-bg); }
+  .cmp-m .cmp-name { color: var(--green); }
+  .cmp-m .cmp-val { color: #173404; }
+  .cmp-a { background: var(--red-bg); }
+  .cmp-a .cmp-name { color: var(--red); }
+  .cmp-a .cmp-val { color: #4A1B0C; }
+
+  .warn-box {
+    background: var(--amber-bg);
+    border: 1px solid #e0a030;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #412402;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .info-box {
+    background: var(--blue-bg);
+    border: 1px solid #a0c0e0;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #042C53;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  .gloss-item { padding: 10px 0; border-bottom: 1px solid #f0ebe0; }
+  .gloss-item:last-child { border-bottom: none; }
+  .gloss-term { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .gloss-def { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  .instr-item { padding: 10px 0; border-bottom: 1px solid #f0ebe0; }
+  .instr-item:last-child { border-bottom: none; }
+  .instr-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .instr-desc { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+  .restart-btn {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #c0bbb0;
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text2);
+    cursor: pointer;
+    margin-bottom: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Tabs ── */
+  .tab-bar {
+    display: flex;
+    background: var(--dark);
+    padding: 0 20px;
+    gap: 0;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    padding: 13px 8px 11px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #7a7a9a;
+    cursor: pointer;
+    transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.01em;
+  }
+  .tab-btn.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Glossary cards ── */
+  .gloss-card {
+    background: white;
+    border: 1px solid #e0dbd0;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin: 12px 20px 0;
+  }
+  .gloss-emoji { font-size: 22px; margin-bottom: 6px; display: block; }
+  .gloss-term { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .gloss-simple { font-size: 13px; color: var(--text2); line-height: 1.65; }
+  .gloss-example {
+    display: inline-block;
+    margin-top: 7px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  strong { font-weight: 500; }
+
+  /* ── Streak bar ── */
+  .streak-bar {
+    background: var(--dark2);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .streak-flame { font-size: 18px; }
+  .streak-text { font-size: 13px; color: var(--gold-light); font-weight: 500; flex: 1; }
+  .streak-days { display: flex; gap: 4px; }
+  .streak-day {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    background: #2a2a4a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    color: #4a4a7a;
+    font-weight: 500;
+  }
+  .streak-day.lit { background: var(--gold); color: var(--dark); }
+  .streak-day.today { background: var(--gold); color: var(--dark); outline: 2px solid #e8d5b7; }
+
+  /* ── Tip del día ── */
+  .tip-card {
+    margin: 14px 20px 0;
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tip-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .tip-label { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; font-weight: 500; margin-bottom: 8px; }
+  .tip-text { font-size: 14px; color: var(--gold-light); line-height: 1.6; }
+  .tip-author { font-size: 11px; color: #5a5a7a; margin-top: 8px; }
+
+  /* ── Seguí aprendiendo ── */
+  .aprender-section { padding: 14px 20px 0; }
+  .aprender-title {
+    font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text2); margin-bottom: 10px;
+  }
+  .aprender-card {
+    background: white;
+    border: 1px solid #e0dbd0;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .aprender-card:active { opacity: 0.8; }
+  .aprender-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .aprender-body { flex: 1; min-width: 0; }
+  .aprender-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .aprender-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .aprender-tag {
+    display: inline-block; margin-top: 6px;
+    font-size: 10px; padding: 2px 8px;
+    border-radius: 20px; font-weight: 500;
+  }
+  .aprender-arrow { color: #c0bbb0; font-size: 18px; align-self: center; flex-shrink: 0; }
+
+  /* ── Detail panel ── */
+  .detail-panel {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--surface);
+    z-index: 200;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  }
+  .detail-panel.open { transform: translateX(0); }
+  .detail-header {
+    background: var(--dark);
+    padding: 52px 20px 18px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .detail-back {
+    background: transparent; border: none;
+    color: var(--gold); font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; padding: 0; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .detail-htitle {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--gold-light);
+    font-weight: 400; line-height: 1.25;
+  }
+  .detail-body { padding: 20px; }
+  .detail-p { font-size: 15px; color: var(--text); line-height: 1.75; margin-bottom: 14px; }
+  .detail-sub { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text2); margin: 18px 0 8px; }
+  .detail-bullet { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.55; color: var(--text); }
+  .detail-bullet-dot { color: var(--gold); flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="badge">SEMINARIO DE ACTUALIZACIÓN</div>
+  <h1>Perfil Inversor AR</h1>
+  <p id="header-sub">6 preguntas · Resultado personalizado · Contexto argentino</p>
+</div>
+
+<div class="streak-bar" id="streak-bar" style="display:none">
+  <span class="streak-flame">🔥</span>
+  <span class="streak-text" id="streak-text">Racha: 1 día</span>
+  <div class="streak-days" id="streak-days"></div>
+</div>
+
+<div class="step-bar" id="step-bar"></div>
+<div class="tab-bar" id="tab-bar" style="display:none">
+  <button class="tab-btn active" onclick="switchTab('perfil',this)">Mi perfil</button>
+  <button class="tab-btn" onclick="switchTab('glosario',this)">📖 Glosario</button>
+  <button class="tab-btn" onclick="switchTab('aprender',this)">🎓 Aprender</button>
+</div>
+
+<div class="main" id="main-scroll">
+  <div class="chat-wrap" id="chat-intro">
+    <div class="chat-name">ASESOR FINANCIERO IA</div>
+    <div class="chat-bubble">Hola! Te voy a hacer 6 preguntas para identificar tu perfil inversor y darte los mejores consejos para tus primeras inversiones en Argentina. ¿Empezamos?</div>
+  </div>
+  <div id="quiz-area"></div>
+  <div id="result-area" style="display:none"></div>
+</div>
+
+<div class="next-wrap" id="next-wrap">
+  <button class="next-btn" id="next-btn" disabled onclick="nextQ()">Siguiente →</button>
+</div>
+
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-header">
+    <button class="detail-back" onclick="closeDetail()">← Volver</button>
+    <div class="detail-htitle" id="detail-title"></div>
+  </div>
+  <div class="detail-body" id="detail-body"></div>
+</div>
+
+<script>
+/* ── Tips del día ── */
+const TIPS = [
+  {text:'No pongas todos los huevos en la misma canasta. Diversificar significa repartir tu dinero entre distintos tipos de inversión para que si una baja, no pierdas todo.', author:'Principio básico de inversión'},
+  {text:'La inflación es silenciosa: si tu plata no genera rendimiento, cada día vale un poco menos. Invertir no es un lujo, es una necesidad en Argentina.', author:'Economía personal'},
+  {text:'El tiempo es tu mejor aliado. $10.000 invertidos hoy pueden valer mucho más en 5 años gracias al interés compuesto — las ganancias generan más ganancias.', author:'Interés compuesto'},
+  {text:'Antes de invertir en algo, preguntate: ¿entiendo cómo funciona? Si no podés explicárselo a un amigo, todavía no es momento de poner plata.', author:'Warren Buffett (adaptado)'},
+  {text:'El dólar MEP es una herramienta legal y accesible para proteger tus ahorros de la devaluación. No hace falta ir al blue ni arriesgarse con el mercado informal.', author:'Tip argentino'},
+  {text:'Los FCI money market son como una cuenta de ahorro mejorada: tu plata trabaja todos los días y podés retirarla cuando quieras. Ideal para empezar.', author:'Para principiantes'},
+  {text:'No existe inversión sin riesgo. La pregunta no es "¿cómo no pierdo?" sino "¿cuánto riesgo puedo tolerar para ganar más?". Conocer tu perfil es el primer paso.', author:'Gestión de riesgo'},
+  {text:'Cuando el mercado cae y todos venden con pánico, los inversores experimentados suelen comprar. Las caídas son oportunidades para quien tiene paciencia.', author:'Mentalidad inversora'},
+  {text:'Una caución bursátil te permite prestar tu dinero por 1 a 7 días y ganar un interés. Es una de las opciones más seguras para la plata que no vas a usar esta semana.', author:'Tip financiero AR'},
+  {text:'Los CEDEARs te permiten "comprar" un pedacito de Apple, Google o Tesla desde Argentina, en pesos, y que tu inversión siga al dólar. Sin cuentas en el exterior.', author:'Inversión dolarizada local'},
+  {text:'Revisá tus inversiones, pero no todos los días. Mirar el precio a cada rato genera ansiedad y lleva a decisiones apresuradas. Una vez por semana es suficiente al principio.', author:'Salud financiera'},
+  {text:'El plazo fijo UVA ajusta por inflación: si los precios suben 5% ese mes, tu plata sube 5%. Es una de las formas más simples de no perder contra la inflación en pesos.', author:'Herramienta CER'},
+  {text:'Empezar con poco está bien. No necesitás miles de dólares para invertir — muchos FCI y CEDEARs permiten entrar con $1.000 o menos.', author:'Para los que empiezan'},
+  {text:'Argentina tiene ciclos: sube, baja, crisis, recuperación. Quien mantuvo sus inversiones a largo plazo suele salir mejor que quien entró y salió en pánico en cada baja.', author:'Historia del mercado argentino'},
+];
+
+/* ── Contenido Seguí Aprendiendo ── */
+const APRENDER = [
+  {
+    emoji:'🏗️', bg:'#E6F1FB', name:'¿Cómo empezar a invertir desde cero?',
+    desc:'Los primeros pasos sin morir en el intento.',
+    tag:'Para principiantes', tagClass:'t-blue',
+    title:'¿Cómo empezar a invertir desde cero?',
+    content:[
+      {type:'p', text:'Invertir parece complicado, pero los primeros pasos son más simples de lo que pensás. El objetivo inicial no es ganar mucho, sino entender cómo funciona y no perder dinero innecesariamente.'},
+      {type:'sub', text:'Paso 1 — Abrí una cuenta en un broker'},
+      {type:'p', text:'Un broker es la plataforma desde donde comprás y vendés inversiones. En Argentina los más usados son Invertir Online (IOL), Bull Market Brokers y Balanz. También podés usar el Home Banking de tu banco para FCI y plazos fijos.'},
+      {type:'sub', text:'Paso 2 — Empezá con lo más simple'},
+      {type:'bullet', text:'FCI money market: ponés la plata y rinde todos los días. Podés retirarla cuando quieras.'},
+      {type:'bullet', text:'Plazo fijo UVA: dejás la plata 90 días mínimo y te ajusta por inflación.'},
+      {type:'bullet', text:'Cauciones bursátiles: prestás tu dinero por 1-7 días a cambio de un interés diario.'},
+      {type:'sub', text:'Paso 3 — Aprendé mientras invertís'},
+      {type:'p', text:'No necesitás saber todo antes de empezar. Invertí un monto chico con el que te sentás cómodo perdiendo, observá cómo se mueve, y de a poco vas sumando más conocimiento y capital.'},
+    ]
+  },
+  {
+    emoji:'💱', bg:'#EAF3DE', name:'Dólar MEP: cómo comprar dólares legalmente',
+    desc:'Sin cepo, sin blue, sin riesgo legal.',
+    tag:'Intermedio', tagClass:'t-green',
+    title:'Dólar MEP: comprá dólares sin el cepo',
+    content:[
+      {type:'p', text:'El dólar MEP (también llamado dólar Bolsa) es una forma 100% legal de comprar dólares sin el límite de $200 por mes del cepo cambiario. No tiene nada de informal.'},
+      {type:'sub', text:'¿Cómo funciona?'},
+      {type:'p', text:'Comprás un bono en pesos (por ejemplo, el AL30) y lo vendés inmediatamente en dólares. La diferencia entre el precio en pesos y en dólares te da el tipo de cambio MEP, que suele estar entre el dólar oficial y el blue.'},
+      {type:'sub', text:'¿Dónde lo hacés?'},
+      {type:'bullet', text:'Invertir Online (IOL): tiene un proceso muy simple y guiado.'},
+      {type:'bullet', text:'Bull Market Brokers: otra opción popular y fácil de usar.'},
+      {type:'bullet', text:'Balanz, Cocos Capital y otros brokers también lo ofrecen.'},
+      {type:'sub', text:'¿Cuánto necesitás?'},
+      {type:'p', text:'Podés empezar con el equivalente a u$s 10 o u$s 20. No hay mínimo obligatorio. Solo necesitás tener una cuenta en un broker y transferir pesos desde tu banco.'},
+    ]
+  },
+  {
+    emoji:'🌍', bg:'#FAEEDA', name:'CEDEARs: invertí en Apple o Tesla desde Argentina',
+    desc:'Dolarizate sin salir del país.',
+    tag:'Intermedio', tagClass:'t-amber',
+    title:'CEDEARs: empresas globales desde tu celular',
+    content:[
+      {type:'p', text:'Los CEDEARs (Certificados de Depósito Argentinos) te permiten comprar "representaciones" de acciones de empresas extranjeras (Apple, Google, Tesla, Nvidia, etc.) desde Argentina, en pesos, y que se ajustan al dólar.'},
+      {type:'sub', text:'¿Por qué son útiles?'},
+      {type:'bullet', text:'Si el dólar sube, el valor de tus CEDEARs en pesos también sube automáticamente.'},
+      {type:'bullet', text:'Podés invertir en las mejores empresas del mundo sin necesitar una cuenta en el exterior.'},
+      {type:'bullet', text:'Se compran y venden en la Bolsa de Buenos Aires igual que cualquier acción local.'},
+      {type:'sub', text:'¿Cuáles son los más populares?'},
+      {type:'bullet', text:'AAPL — Apple (tecnología, iPhone)'},
+      {type:'bullet', text:'GOOGL — Alphabet (dueña de Google)'},
+      {type:'bullet', text:'NVDA — Nvidia (chips para IA)'},
+      {type:'bullet', text:'AMZN — Amazon (e-commerce y cloud)'},
+      {type:'sub', text:'Tené en cuenta'},
+      {type:'p', text:'Los CEDEARs pueden bajar si la empresa cae en su bolsa original (por ejemplo, NASDAQ). Son más estables que las acciones argentinas, pero no son infalibles.'},
+    ]
+  },
+  {
+    emoji:'📉', bg:'#FAECE7', name:'¿Qué hacer cuando el mercado cae?',
+    desc:'Cómo no perder la cabeza (ni la plata).',
+    tag:'Mentalidad', tagClass:'t-red',
+    title:'Cuando el mercado cae: guía para no entrar en pánico',
+    content:[
+      {type:'p', text:'Toda persona que invierte, en algún momento, va a ver cómo su inversión baja. Es parte del proceso. Lo que diferencia a un buen inversor de uno que pierde dinero es cómo reacciona en ese momento.'},
+      {type:'sub', text:'Lo que NO hay que hacer'},
+      {type:'bullet', text:'Vender de inmediato por miedo: "cristalizás" la pérdida y te perdés la recuperación.'},
+      {type:'bullet', text:'Revisar el precio 10 veces por día: solo aumenta la ansiedad sin cambiar nada.'},
+      {type:'bullet', text:'Sacar conclusiones definitivas en una semana: los mercados fluctúan constantemente.'},
+      {type:'sub', text:'Lo que SÍ hay que hacer'},
+      {type:'bullet', text:'Preguntarte: ¿cambió algo fundamental en lo que invertí? Si no, mantené.'},
+      {type:'bullet', text:'Recordar por qué compraste: si el motivo sigue siendo válido, el HOLDING es lo correcto.'},
+      {type:'bullet', text:'Si podés y querés, comprá más: las caídas suelen ser oportunidades de compra.'},
+      {type:'sub', text:'Argentina tiene ciclos'},
+      {type:'p', text:'El mercado argentino es especialmente volátil porque depende mucho de la política y el tipo de cambio. Quien aguantó en 2018, 2020 y 2022 recuperó todo y más. La paciencia es una estrategia.'},
+    ]
+  },
+];
+
+const questions = [
+  { id:'edad', label:'Paso 1 · Horizonte temporal', text:'¿Cuál es tu rango de edad?',
+    options:[
+      {text:'18 – 30 años', val:3},{text:'31 – 45 años', val:2},
+      {text:'46 – 60 años', val:1},{text:'Más de 60 años', val:0}]},
+  { id:'objetivo', label:'Paso 2 · Objetivos', text:'¿Cuál es tu principal objetivo financiero?',
+    options:[
+      {text:'Maximizar ganancias, acepto alta volatilidad', val:3},
+      {text:'Crecer moderadamente con algo de riesgo', val:2},
+      {text:'Preservar mi capital y ganar algo extra', val:1},
+      {text:'Solo quiero protegerme de la inflación', val:0}]},
+  { id:'plazo', label:'Paso 3 · Plazo de inversión', text:'¿En cuánto tiempo necesitás el dinero?',
+    options:[
+      {text:'Más de 5 años', val:3},{text:'Entre 2 y 5 años', val:2},
+      {text:'Entre 6 meses y 2 años', val:1},{text:'Menos de 6 meses', val:0}]},
+  { id:'conocimiento', label:'Paso 4 · Conocimiento previo', text:'¿Cuánto sabés sobre inversiones?',
+    options:[
+      {text:'Mucho — opero habitualmente en bolsa', val:3},
+      {text:'Intermedio — conozco acciones y FCI', val:2},
+      {text:'Básico — sé que existen pero nunca invertí', val:1},
+      {text:'Ninguno — recién empiezo a informarme', val:0}]},
+  { id:'caida', label:'Paso 5 · Reacción al riesgo', text:'Tu inversión cae un 20%. ¿Qué hacés?',
+    options:[
+      {text:'Compro más — es una oportunidad', val:3},
+      {text:'Espero sin hacer nada', val:2},
+      {text:'Me preocupo, pero aguanto', val:1},
+      {text:'Vendo para no perder más', val:0}]},
+  { id:'moneda', label:'Paso 6 · Moneda de referencia', text:'¿En qué moneda preferís invertir?',
+    options:[
+      {text:'Dólares — quiero protegerme de la devaluación', val:2},
+      {text:'Pesos — busco rendimiento en moneda local', val:1},
+      {text:'No tengo preferencia', val:1},{text:'No lo sé aún', val:0}]}
+];
+
+let answers={}, cur=0, sel=null;
+
+/* ── localStorage helpers ── */
+function saveProfile(p){ try{ localStorage.setItem('piar_profile', p); }catch(e){} }
+function loadProfile(){ try{ return localStorage.getItem('piar_profile'); }catch(e){ return null; } }
+function saveStreak(){
+  try{
+    const today = new Date().toDateString();
+    const raw = localStorage.getItem('piar_streak');
+    let data = raw ? JSON.parse(raw) : {days:[], count:0};
+    if(!data.days.includes(today)){
+      data.days.push(today);
+      if(data.days.length > 7) data.days = data.days.slice(-7);
+      data.count = (data.count||0)+1;
+      localStorage.setItem('piar_streak', JSON.stringify(data));
+    }
+    return data;
+  }catch(e){ return {days:[], count:0}; }
+}
+function loadStreak(){ try{ const r=localStorage.getItem('piar_streak'); return r?JSON.parse(r):{days:[],count:0}; }catch(e){ return {days:[],count:0}; } }
+
+/* ── Tip del día (rotativo por día del año) ── */
+function getTodayTip(){
+  const d = new Date();
+  const dayOfYear = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000);
+  return TIPS[dayOfYear % TIPS.length];
+}
+
+/* ── Streak bar ── */
+function renderStreakBar(){
+  const data = loadStreak();
+  const days = ['L','M','X','J','V','S','D'];
+  const today = new Date().getDay();
+  const todayStr = new Date().toDateString();
+  let dots = '';
+  for(let i=0;i<7;i++){
+    const dayIdx = (today - 6 + i + 7) % 7;
+    const label = days[dayIdx];
+    const isToday = i===6;
+    const daysAgo = 6-i;
+    const checkDate = new Date(Date.now() - daysAgo*86400000).toDateString();
+    const lit = data.days.includes(checkDate);
+    dots += `<div class="streak-day${lit?' lit':''}${isToday&&lit?' today':''}">${label}</div>`;
+  }
+  return `
+  <div class="streak-bar">
+    <span class="streak-flame">🔥</span>
+    <span class="streak-text">${data.count} día${data.count!==1?'s':''} seguidos</span>
+    <div class="streak-days">${dots}</div>
+  </div>`;
+}
+
+/* ── Seguí aprendiendo tab ── */
+function renderAprenderTab(){
+  const tip = getTodayTip();
+  return `
+  <div id="tab-aprender" class="tab-panel">
+    <div class="tip-card" style="margin-top:14px">
+      <div class="tip-label">💡 TIP DEL DÍA</div>
+      <div class="tip-text">"${tip.text}"</div>
+      <div class="tip-author">— ${tip.author}</div>
+    </div>
+    <div class="aprender-section">
+      <div class="aprender-title">Temas para explorar</div>
+      ${APRENDER.map((a,i)=>`
+        <div class="aprender-card" onclick="openDetail(${i})">
+          <div class="aprender-icon" style="background:${a.bg}">${a.emoji}</div>
+          <div class="aprender-body">
+            <div class="aprender-name">${a.name}</div>
+            <div class="aprender-desc">${a.desc}</div>
+            <span class="aprender-tag ${a.tagClass}">${a.tag}</span>
+          </div>
+          <div class="aprender-arrow">›</div>
+        </div>`).join('')}
+    </div>
+    <div style="height:24px"></div>
+  </div>`;
+}
+
+function openDetail(i){
+  const a = APRENDER[i];
+  document.getElementById('detail-title').textContent = a.title;
+  document.getElementById('detail-body').innerHTML = a.content.map(c=>{
+    if(c.type==='p') return `<p class="detail-p">${c.text}</p>`;
+    if(c.type==='sub') return `<div class="detail-sub">${c.text}</div>`;
+    if(c.type==='bullet') return `<div class="detail-bullet"><span class="detail-bullet-dot">▸</span><span>${c.text}</span></div>`;
+    return '';
+  }).join('');
+  document.getElementById('detail-panel').classList.add('open');
+}
+function closeDetail(){
+  document.getElementById('detail-panel').classList.remove('open');
+}
+
+function buildDots(){
+  const bar=document.getElementById('step-bar');
+  bar.innerHTML='';
+  questions.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='step-dot'+(i<cur?' done':i===cur?' active':'');
+    bar.appendChild(d);
+  });
+}
+
+function renderQ(){
+  sel=null;
+  document.getElementById('next-btn').disabled=true;
+  const q=questions[cur];
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="q-card">
+      <div class="q-label">${q.label}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.options.map((o,i)=>`
+        <button class="opt-btn" onclick="pick(this,${i},${o.val})">
+          <span class="opt-circle"></span>${o.text}
+        </button>`).join('')}
+    </div>`;
+  buildDots();
+  document.getElementById('next-btn').textContent = cur<questions.length-1 ? 'Siguiente →' : 'Ver mi perfil →';
+  document.getElementById('main-scroll').scrollTop=0;
+}
+
+function pick(btn,idx,val){
+  document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  sel={idx,val};
+  document.getElementById('next-btn').disabled=false;
+}
+
+function nextQ(){
+  if(!sel) return;
+  answers[questions[cur].id]=sel.val;
+  cur++;
+  if(cur<questions.length){ renderQ(); }
+  else { showResult(); }
+}
+
+function score(){ return Object.values(answers).reduce((a,b)=>a+b,0); }
+function profile(s){ return s<=5?'conservador':s<=11?'moderado':'agresivo'; }
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('main-scroll').scrollTop=0;
+}
+
+function showResult(){
+  document.getElementById('quiz-area').style.display='none';
+  document.getElementById('chat-intro').style.display='none';
+  document.getElementById('step-bar').style.display='none';
+  document.getElementById('tab-bar').style.display='flex';
+  document.getElementById('next-wrap').style.display='none';
+  document.getElementById('result-area').style.display='block';
+  const s=score(), p=profile(s);
+  saveProfile(p, s);
+  updateStreak();
+  document.getElementById('header-sub').textContent='Bienvenido de vuelta · Tu perfil está guardado';
+  renderResultHTML(p, s);
+}
+
+function renderResultHTML(p, s){
+  const maxS=17;
+  const pct=Math.round((s/maxS)*100);
+
+  const data={
+    conservador:{
+      heroClass:'hero-cons', title:'Perfil Conservador',
+      sub:'Tu prioridad es la seguridad del capital por encima del rendimiento.',
+      risk:25, rend:45,
+      criterios:[
+        'Tu horizonte temporal o reacción ante caídas sugieren baja tolerancia al riesgo.',
+        'Priorizás la preservación del capital sobre el crecimiento.',
+        'Es posible que estés en etapa de formación financiera.'
+      ],
+      objetivos:['Proteger ahorros de la inflación','Rentabilidad estable y predecible','Alta liquidez para emergencias'],
+      instrumentos:[
+        {name:'Plazos fijos UVA', tag:'t-blue', desc:'Ajustados por inflación. Seguros, en pesos.'},
+        {name:'FCI money market', tag:'t-blue', desc:'Fondos de alta liquidez y bajo riesgo.'},
+        {name:'Cauciones bursátiles', tag:'t-blue', desc:'Préstamos garantizados a corto plazo, muy seguros.'},
+        {name:'Obligaciones negociables', tag:'t-green', desc:'Bonos de empresas con interés fijo.'}
+      ],
+      moneda:'Para un perfil conservador en Argentina, recomendamos <strong>dólares MEP</strong> como reserva de valor. Los pesos sufren inflación constante. Podés mantener una porción en pesos en instrumentos CER para el corto plazo.',
+      holding:'El plazo fijo UVA y los FCI MM son muy estables. Una caída temporal no implica pérdida real si mantenés la inversión. No entres en pánico — HOLDING.'
+    },
+    moderado:{
+      heroClass:'hero-mod', title:'Perfil Moderado',
+      sub:'Buscás crecimiento real, pero no querés arriesgar todo tu capital.',
+      risk:55, rend:70,
+      criterios:[
+        'Tenés conocimiento básico-intermedio y tolerancia media al riesgo.',
+        'Tu horizonte temporal te permite esperar recuperaciones del mercado.',
+        'Aceptás volatilidad moderada a cambio de mejores retornos.'
+      ],
+      objetivos:['Crecer por encima de la inflación','Diversificar en distintos instrumentos','Horizonte de 2 a 5 años'],
+      instrumentos:[
+        {name:'FCI mixtos', tag:'t-green', desc:'Mezclan acciones y bonos para equilibrar riesgo.'},
+        {name:'Bonos soberanos / ON', tag:'t-green', desc:'Renta fija con mejor rendimiento que plazos fijos.'},
+        {name:'CEDEARs', tag:'t-amber', desc:'Certificados de empresas extranjeras en pesos/dólares.'},
+        {name:'Acciones líderes', tag:'t-amber', desc:'Merval: YPF, Galicia, Pampa. Mayor volatilidad.'}
+      ],
+      moneda:'Recomendamos <strong>dividir: 60% en dólares, 40% en pesos</strong>. Los CEDEARs son una excelente forma de estar en dólares desde Argentina sin restricciones cambiarias.',
+      holding:'Si el Merval cae o los bonos bajan, recordá que Argentina tiene ciclos políticos y económicos. Una caída del 20-30% puede recuperarse en meses. Si el fundamento sigue siendo bueno, HOLDING.'
+    },
+    agresivo:{
+      heroClass:'hero-agr', title:'Perfil Agresivo',
+      sub:'Buscás maximizar el retorno y aceptás alta volatilidad para lograrlo.',
+      risk:85, rend:95,
+      criterios:[
+        'Tenés experiencia y conocimiento del mercado bursátil.',
+        'Tu horizonte largo te permite absorber caídas fuertes.',
+        'Tu reacción ante la volatilidad es comprar más, no vender.'
+      ],
+      objetivos:['Multiplicar el capital a largo plazo','Aprovechar oportunidades en mercados volátiles','Posicionarse en sectores de alto crecimiento'],
+      instrumentos:[
+        {name:'Acciones Merval', tag:'t-red', desc:'Alto riesgo / alta rentabilidad. Energía, bancos, commodities.'},
+        {name:'CEDEARs growth', tag:'t-amber', desc:'Nvidia, Tesla, Amazon — exposición a tech global.'},
+        {name:'FCI renta variable', tag:'t-red', desc:'Fondos 100% en acciones para máximo crecimiento.'},
+        {name:'Criptomonedas (fracción)', tag:'t-gray', desc:'BTC/ETH como cobertura, máx. 5-10% del portafolio.'}
+      ],
+      moneda:'Para perfil agresivo, <strong>base en dólares es clave</strong>. CEDEARs y acciones dolarizadas protegen de la devaluación. En pesos, solo lo que podés permitirte perder.',
+      holding:'Vas a ver caídas del 30-50% en algún momento — especialmente en Argentina. El principio del HOLDING es central: si creés en el activo y el contexto no cambió radicalmente, aguantá. Quien vendió en pánico en 2018, 2020 o 2022 se perdió las recuperaciones.'
+    }
+  };
+
+  const d=data[p];
+
+  document.getElementById('result-area').innerHTML=`
+  <div id="tab-perfil" class="tab-panel active">
+  <div class="result-wrap">
+
+    <div class="result-hero ${d.heroClass}">
+      <div class="rh-label">TU PERFIL INVERSOR</div>
+      <div class="rh-title">${d.title}</div>
+      <div class="rh-sub">${d.sub}</div>
+      <div class="bar-label"><span>Tolerancia al riesgo</span><span>${d.risk}%</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${d.risk}%"></div></div>
+      <div class="bar-label"><span>Potencial de rendimiento</span><span>${d.rend}%</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${d.rend}%"></div></div>
+    </div>
+
+    <div class="s-card">
+      <div class="s-title"><span class="s-icon">📊</span> Comparación de perfiles</div>
+      <div class="compare-grid">
+        <div class="cmp cmp-c ${p==='conservador'?'cmp-active':''}">
+          <div class="cmp-name">Conservador</div>
+          <div class="cmp-val">25%</div>
+        </div>
+        <div class="cmp cmp-m ${p==='moderado'?'cmp-active':''}">
+          <div class="cmp-name">Moderado</div>
+          <div class="cmp-val">55%</div>
+        </div>
+        <div class="cmp cmp-a ${p==='agresivo'?'cmp-active':''}">
+          <div class="cmp-name">Agresivo</div>
+          <div class="cmp-val">85%</div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:#888;margin-top:8px;">El recuadro dorado indica tu perfil actual.</p>
+    </div>
+
+    <div class="s-card">
+      <div class="s-title"><span class="s-icon">🎯</span> ¿Por qué este perfil?</div>
+      ${d.criterios.map(c=>`<div class="bullet"><span class="bullet-dot">▸</span><span>${c}</span></div>`).join('')}
+      <div style="margin-top:12px;font-size:12px;color:#888;margin-bottom:6px;">Tus objetivos típicos:</div>
+      ${d.objetivos.map(o=>`<span class="tag t-gray">${o}</span>`).join('')}
+    </div>
+
+    <div class="s-card">
+      <div class="s-title"><span class="s-icon">🏦</span> Instrumentos recomendados</div>
+      ${d.instrumentos.map(i=>`
+        <div class="instr-item">
+          <div class="instr-name"><span class="tag ${i.tag}">${i.name}</span></div>
+          <div class="instr-desc">${i.desc}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="s-card">
+      <div class="s-title"><span class="s-icon">💵</span> ¿Pesos o dólares?</div>
+      <p style="font-size:14px;line-height:1.7;">${d.moneda}</p>
+      <div class="warn-box">⚠️ <strong>Contexto argentino:</strong> Las inversiones locales son volátiles a largo plazo por factores políticos y económicos. Suelen rendir bien a corto plazo, pero la devaluación puede erosionar ganancias. El riesgo país es estructuralmente alto.</div>
+    </div>
+
+    <div class="s-card">
+      <div class="s-title"><span class="s-icon">📉</span> Si el % baja — no entres en pánico</div>
+      <p style="font-size:14px;line-height:1.7;margin-bottom:10px;">${d.holding}</p>
+      <div class="info-box"><strong>HOLDING</strong> significa mantener la inversión sin vender durante una caída temporal. Es una de las estrategias más probadas históricamente. Los mercados, con el tiempo, suelen recuperarse.</div>
+    </div>
+
+    <div style="padding:0 0 16px;">
+      <button class="restart-btn" onclick="restart()">↺ Volver a empezar</button>
+    </div>
+
+  </div>
+  </div>
+
+  <div id="tab-glosario" class="tab-panel">
+    <div style="padding:12px 20px 4px;">
+      <p style="font-size:13px;color:var(--text2);line-height:1.6;">Acá encontrás los términos más comunes del mundo de las inversiones, explicados como si nunca hubieras invertido antes.</p>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🏢</span>
+      <div class="gloss-term">Acciones</div>
+      <div class="gloss-simple">Cuando comprás una acción, comprás un pedacito de una empresa. Si a la empresa le va bien y crece, tu inversión vale más. Si le va mal, vale menos. Es como ser "socio" de YPF o Mercado Libre, pero con una participación muy pequeña.</div>
+      <span class="gloss-example">Ejemplo: comprás 1 acción de YPF a $5.000. Si sube a $6.000, ganaste $1.000.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">📄</span>
+      <div class="gloss-term">Bonos</div>
+      <div class="gloss-simple">Es como prestarle plata a una empresa o al gobierno. Ellos te prometen devolverte ese dinero en una fecha fija, más un interés (ganancia) por haberles prestado. Es más predecible que las acciones, pero la ganancia suele ser menor.</div>
+      <span class="gloss-example">Ejemplo: le "prestás" $100.000 al gobierno. En 1 año te devuelven $110.000.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🪣</span>
+      <div class="gloss-term">FCI – Fondo Común de Inversión</div>
+      <div class="gloss-simple">Un grupo de personas junta su dinero en un "fondo" y un equipo de profesionales lo invierte por todos. Vos ponés, por ejemplo, $10.000 y ese dinero se mezcla con el de otros inversores para comprar una variedad de cosas. Ideal para empezar sin saber mucho.</div>
+      <span class="gloss-example">Ejemplo: entrás a Home Banking → Inversiones → FCI → elegís uno y listo.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🌎</span>
+      <div class="gloss-term">CEDEARs</div>
+      <div class="gloss-simple">Son "certificados" que te permiten comprar acciones de empresas del exterior (Apple, Google, Tesla) pero desde Argentina y en pesos. Lo bueno es que su valor sube cuando sube el dólar, así que también te protege de la devaluación.</div>
+      <span class="gloss-example">Ejemplo: comprás CEDEARs de Apple desde tu broker argentino, en pesos.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">📈</span>
+      <div class="gloss-term">Merval</div>
+      <div class="gloss-simple">Es el "termómetro" de la Bolsa argentina. Agrupa las empresas más importantes que cotizan en Buenos Aires (YPF, Galicia, Pampa Energía, etc.). Cuando dicen "subió el Merval", significa que en general las empresas argentinas valen más ese día.</div>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">💵</span>
+      <div class="gloss-term">Dólar MEP (o dólar Bolsa)</div>
+      <div class="gloss-simple">Es una forma completamente legal de comprar dólares sin el límite del cepo cambiario ($200 por mes). Se hace a través de la bolsa: comprás un bono en pesos y lo vendés en dólares. El precio suele estar entre el dólar oficial y el blue.</div>
+      <span class="gloss-example">Lo podés hacer desde apps como Invertir Online, Bull Market o tu banco.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🔥</span>
+      <div class="gloss-term">Inflación y CER</div>
+      <div class="gloss-simple">La inflación es cuando los precios suben y tu plata "vale menos". El CER es un índice que mide esa suba de precios. Invertir en algo "CER" significa que tu inversión se ajusta automáticamente con la inflación, protegiendo tu dinero.</div>
+      <span class="gloss-example">Ejemplo: el plazo fijo UVA ajusta por CER — si la inflación es 5% ese mes, tu plata crece 5%.</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">📊</span>
+      <div class="gloss-term">Plazo fijo UVA</div>
+      <div class="gloss-simple">Un plazo fijo común te da un % fijo que puede quedar por debajo de la inflación. El UVA, en cambio, ajusta por inflación: siempre vas a ganar al menos lo que subieron los precios. Mínimo 90 días, desde cualquier banco.</div>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🤝</span>
+      <div class="gloss-term">Caución bursátil</div>
+      <div class="gloss-simple">Es una forma de prestarle tu dinero a otro inversor por muy poco tiempo (1 a 7 días) a cambio de un interés. Muy segura porque la operación está garantizada por la Bolsa. Funciona como un plazo fijo ultra corto.</div>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">✋</span>
+      <div class="gloss-term">Holding</div>
+      <div class="gloss-simple">En inglés significa "mantener". En inversiones se usa para decir: "no vendas aunque baje". Si creés en lo que compraste y el precio cae, a veces lo mejor es no hacer nada y esperar que se recupere. Vender con miedo suele ser el error más común.</div>
+      <span class="gloss-example">Frase clásica: "El mercado cae en escalera y sube en ascensor."</span>
+    </div>
+
+    <div class="gloss-card">
+      <span class="gloss-emoji">🏦</span>
+      <div class="gloss-term">Broker</div>
+      <div class="gloss-simple">Es la plataforma o empresa que te permite comprar y vender inversiones. En Argentina hay brokers conocidos como Invertir Online (IOL), Bull Market, o incluso algunos bancos. Es como la "tienda" donde vas a comprar tus inversiones.</div>
+    </div>
+
+    <div style="padding:16px 20px 24px;">
+      <button class="restart-btn" onclick="restart()">↺ Volver a empezar</button>
+    </div>
+  </div>
+
+  ${renderAprenderTab()}`;
+
+  document.getElementById('main-scroll').scrollTop=0;
+}
+
+function restart(){
+  localStorage.removeItem('inv_data');
+  answers={}; cur=0; sel=null;
+  document.getElementById('quiz-area').style.display='block';
+  document.getElementById('chat-intro').style.display='block';
+  document.getElementById('step-bar').style.display='flex';
+  document.getElementById('tab-bar').style.display='none';
+  document.getElementById('streak-bar').style.display='none';
+  document.getElementById('next-wrap').style.display='block';
+  document.getElementById('result-area').style.display='none';
+  document.getElementById('header-sub').textContent='6 preguntas · Resultado personalizado · Contexto argentino';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{ b.classList.toggle('active',i===0); });
+  renderQ();
+}
+
+/* ── localStorage persistence & streak ── */
+function saveProfile(profileKey, scoreVal){
+  const today = new Date().toISOString().slice(0,10);
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem('inv_data')||'{}'); } catch(e){}
+  stored.profile = profileKey;
+  stored.score = scoreVal;
+  stored.savedDate = today;
+  const last = stored.lastOpen;
+  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if(last === today){ /* already counted */ }
+  else if(last === yesterday){ stored.streak = (stored.streak||1)+1; }
+  else { stored.streak = 1; }
+  stored.lastOpen = today;
+  localStorage.setItem('inv_data', JSON.stringify(stored));
+}
+
+function loadSavedProfile(){
+  try { return JSON.parse(localStorage.getItem('inv_data')||'{}'); } catch(e){ return {}; }
+}
+
+function updateStreak(){
+  let stored = loadSavedProfile();
+  const today = new Date().toISOString().slice(0,10);
+  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  let streak = stored.streak || 1;
+  if(stored.lastOpen !== today){
+    streak = stored.lastOpen === yesterday ? (stored.streak||1)+1 : 1;
+    stored.streak = streak; stored.lastOpen = today;
+    localStorage.setItem('inv_data', JSON.stringify(stored));
+  }
+  document.getElementById('streak-bar').style.display='flex';
+  document.getElementById('streak-text').textContent = streak===1?'¡Primer día!': `Racha: ${streak} día${streak>1?'s':''}`;
+  const days=['L','M','X','J','V','S','D'];
+  const show=Math.min(streak,7);
+  document.getElementById('streak-days').innerHTML = days.map((d,i)=>{
+    const lit=i<show, isToday=i===show-1;
+    return `<div class="streak-day${isToday?' today':lit?' lit':''}">${d}</div>`;
+  }).join('');
+}
+
+/* ── Boot ── */
+(function boot(){
+  const stored = loadSavedProfile();
+  if(stored.profile && stored.score !== undefined){
+    updateStreak();
+    document.getElementById('quiz-area').style.display='none';
+    document.getElementById('chat-intro').style.display='none';
+    document.getElementById('step-bar').style.display='none';
+    document.getElementById('tab-bar').style.display='flex';
+    document.getElementById('next-wrap').style.display='none';
+    document.getElementById('result-area').style.display='block';
+    document.getElementById('header-sub').textContent='Bienvenido de vuelta · Tu perfil está guardado';
+    renderResultHTML(stored.profile, stored.score);
+  } else {
+    renderQ();
+  }
+})();
+
+</script>
+</body>
+</html>
